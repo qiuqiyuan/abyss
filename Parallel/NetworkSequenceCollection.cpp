@@ -423,6 +423,7 @@ void NetworkSequenceCollection::runControl()
 		switch (m_state) {
 			case NAS_LOADING:
 			{
+				RTimer *rtimer = new RTimer("NAS_LOADING");
 				loadSequences();
 				EndState();
 
@@ -454,9 +455,12 @@ void NetworkSequenceCollection::runControl()
 
 				SetState(m_data.isAdjacencyLoaded()
 						? NAS_ERODE : NAS_GEN_ADJ);
-				break;
+                                delete rtimer;
+ 				break;
 			}
 			case NAS_GEN_ADJ:
+			{
+				RTimer *rtimer = new RTimer("NAS_GEN_ADJ");
 				cout << "Finding adjacenct k-mer...\n";
 				m_comm.sendControlMessage(APC_SET_STATE, NAS_GEN_ADJ);
 				m_comm.barrier();
@@ -480,13 +484,19 @@ void NetworkSequenceCollection::runControl()
 				EndState();
 
 				SetState(opt::erode > 0 ? NAS_ERODE : NAS_TRIM);
+				delete rtimer;
 				break;
+			}
 			case NAS_ERODE:
+			{
+				RTimer *rtimer = new RTimer("NAS_ERODE");
 				assert(opt::erode > 0);
 				cout << "Eroding tips...\n";
 				controlErode();
 				SetState(NAS_TRIM);
+				delete rtimer;
 				break;
+			}
 
 			case NAS_LOAD_COMPLETE:
 			case NAS_ADJ_COMPLETE:
@@ -504,19 +514,27 @@ void NetworkSequenceCollection::runControl()
 				exit(EXIT_FAILURE);
 
 			case NAS_TRIM:
+			{
+				RTimer *rtimer = new RTimer("NAS_TRIM");
 				controlTrim();
 				SetState(opt::coverage > 0 ? NAS_COVERAGE
 						: opt::bubbleLen > 0 ? NAS_POPBUBBLE
 						: NAS_MARK_AMBIGUOUS);
+				delete rtimer;
 				break;
-
+			}
 			case NAS_COVERAGE:
+			{
+				RTimer *rtimer = new RTimer("NAS_COVERAGE");
 				controlCoverage();
 				SetState(opt::erode > 0 ? NAS_ERODE : NAS_TRIM);
+				delete rtimer;
 				break;
+			}
 
 			case NAS_POPBUBBLE:
 			{
+				RTimer *rtimer = new RTimer("NAS_POPBUBBLE");
 				assert(opt::bubbleLen > 0);
 				ofstream out;
 				AssemblyAlgorithms::openBubbleFile(out);
@@ -529,14 +547,20 @@ void NetworkSequenceCollection::runControl()
 				cout << "Removed " << numPopped << " bubbles.\n";
 
 				SetState(NAS_MARK_AMBIGUOUS);
+				delete rtimer;
 				break;
 			}
 			case NAS_MARK_AMBIGUOUS:
+			{
+				RTimer *rtimer = new RTimer("NAS_MARK_AMBIGUOUS");
 				controlMarkAmbiguous();
 				SetState(NAS_ASSEMBLE);
+				delete rtimer;
 				break;
+			}
 			case NAS_ASSEMBLE:
 			{
+				RTimer *rtimer = new RTimer("NAS_ASSEMBLE");
 				cout << "Assembling...\n";
 				m_comm.sendControlMessage(APC_ASSEMBLE);
 				m_comm.barrier();
@@ -563,6 +587,7 @@ void NetworkSequenceCollection::runControl()
 					<< " contigs.\n";
 
 				SetState(NAS_DONE);
+				delete rtimer;
 				break;
 			}
 			case NAS_DONE:
