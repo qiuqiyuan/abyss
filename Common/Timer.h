@@ -17,4 +17,18 @@ class Timer
 		clock_t m_start;
 };
 
+/************* Rahul Nihalani *************/
+
+class RTimer
+{
+        public:
+               	RTimer(std::string funcString);
+                ~RTimer();
+        private:
+                std::string m_funcStr;
+                clock_t m_start;
+};
+
+/**********End Rahul Nihalani *************/
+
 #endif
