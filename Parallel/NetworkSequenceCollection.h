@@ -11,6 +11,7 @@
 #include <ostream>
 #include <set>
 #include <utility>
+#include <iostream>
 
 enum NetworkAssemblyState
 {
@@ -84,7 +85,13 @@ class NetworkSequenceCollection : public ISequenceCollection
 		// Receive and dispatch packets.
 		size_t pumpNetwork();
 		size_t pumpFlushReduce();
-
+                
+#ifndef DEBUG_QQY_ENABLE
+                //output counter info stored in CommLayer 
+                void outputCounter(long long unsigned *array, 
+                                long long unsigned number, std::string phase_name);
+#endif
+                
 		void completeOperation();
 
 		// run the assembly
@@ -191,6 +198,15 @@ class NetworkSequenceCollection : public ISequenceCollection
 		// the state flow.
 		unsigned m_numReachedCheckpoint;
 
+#ifndef DEBUG_QQY_ENABLE
+                long long unsigned qqy_m_numSendPackets_array[48];
+                long long unsigned qqy_m_numSendMessages_array[48];
+                long long unsigned qqy_m_numSendBytes_array[48];
+                long long unsigned qqy_m_numRecvPackets_array[48];
+                long long unsigned qqy_m_numRecvMessages_array[48];
+                long long unsigned qqy_m_numRecvBytes_array[48];
+#endif 
+                
 		/** The sum of the values returned by the slave nodes in their
 		 * checkpoint messages.
 		 */

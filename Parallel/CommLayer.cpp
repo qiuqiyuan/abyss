@@ -6,6 +6,7 @@
 #include <mpi.h>
 #include <cstring>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -112,6 +113,24 @@ long long unsigned CommLayer::reduce(long long unsigned count)
 	logger(4) << "left reduce: " << sum << '\n';
 	return sum;
 }
+
+#ifndef DEBUG_QQY_ENABLE
+/** Gather MPI send counter to master
+ * @return the filled buffer 
+ */
+long long unsigned* CommLayer::gather(long long unsigned* rev_buffer, 
+					long long unsigned count)
+{
+    //cout << "Inside gather function" << endl;
+    //cout << "Gathering MPI_call info" << endl;
+    MPI_Gather(&count, 1, MPI_UNSIGNED_LONG_LONG, rev_buffer, 1, 
+            MPI_UNSIGNED_LONG_LONG, 0, MPI_COMM_WORLD);
+    //Reset MPI_send call counter after gather
+    return rev_buffer;
+}
+#endif
+
+
 
 /** Reduce the specified vector. */
 vector<unsigned> CommLayer::reduce(const vector<unsigned>& v)

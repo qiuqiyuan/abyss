@@ -58,6 +58,43 @@ class CommLayer
 		std::vector<long unsigned> reduce(
 				const std::vector<long unsigned>& v);
 
+#ifndef DEBUG_QQY_ENABLE
+                // Block until master gather all counts
+                long long unsigned* gather(long long unsigned* rev_buffer, 
+                long long unsigned count);
+                
+                uint64_t getNumSendPackets()
+                {
+                    return m_txPackets;
+                }
+                
+                uint64_t getNumSendMessages()
+                {
+                    return m_txMessages;
+                }
+                
+                uint64_t getNumSendBytes()
+                {
+                    return m_txBytes;
+                }
+                
+                uint64_t getNumRecvPackets()
+                {
+                    return m_rxPackets;
+                }
+                
+                uint64_t getNumRecvMessages()
+                {
+                    return m_rxMessages;
+                }
+                
+                uint64_t getNumRecvBytes()
+                {
+                    return m_rxBytes;
+                }
+#endif
+                
+                
 		// Send a control message
 		void sendControlMessage(APControl m, int argument = 0);
 
@@ -95,6 +132,7 @@ class CommLayer
 		uint64_t m_txPackets;
 		uint64_t m_txMessages;
 		uint64_t m_txBytes;
+
 };
 
 #endif
