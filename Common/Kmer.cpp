@@ -5,6 +5,27 @@
 #include <algorithm>
 #include <cstring>
 
+//Sharanyan
+#include <stdio.h>
+char *strrev(char *str)
+
+{
+
+	char *p1, *p2;
+
+      	if (! str || ! *str)
+		return str;
+
+ 	for (p1 = str, p2 = str + strlen(str) - 1; p2 > p1; ++p1, --p2)
+	{
+	        *p1 ^= *p2;
+	        *p2 ^= *p1;
+	        *p1 ^= *p2;
+        }
+
+        return str;
+}
+
 using namespace std;
 
 /** The size of a k-mer. This variable is static and is shared by all
@@ -48,6 +69,11 @@ unsigned Kmer::getCode() const
 	/* At k=19, this hash function always returns an even number due
 	 * to the sequence and its reverse complement overlapping when the
 	 * xor is calculated. A more general solution is needed. */
+	
+
+	
+ 	//Old code :: Shar..backup
+	/*
 	const unsigned NUM_BYTES = s_length < 20 ? s_length/8 : 4;
 	Kmer rc = *this;
 	rc.reverseComplement();
@@ -56,7 +82,59 @@ unsigned Kmer::getCode() const
 	unsigned sum = 0;
 	for (unsigned i = 0; i < NUM_BYTES; i++)
 		sum = prime * sum + (m_seq[i] ^ rc.m_seq[i]);
-	return sum;
+	return  sum;
+	*/
+	
+	
+ 	//Kmer rc = *this;
+	unsigned int *curr, *min, *next, i;
+	unsigned int iter_n = 0, curr_val, next_val, min_val;
+	min = (unsigned int*)m_seq;
+	curr = min;
+	//char temp_c[5];
+	
+	//printf("KMer is %s\n",m_seq);
+	//getchar();
+	const unsigned kwindow = 16;
+	for (i = 0; i <= 24-kwindow; i++,iter_n++)
+	{
+		//memcpy(&temp_c[0], &m_seq[i/4], 4);
+		//temp_c[4]='\0';
+		//strrev(temp_c);
+		curr = (unsigned int*)&m_seq[i/4];
+		curr_val = *curr;
+		
+		//printf("Iter %d Curr: %u \n",i,curr_val );
+		//getchar();
+		//curr_val = *curr;
+		curr_val = curr_val << (2 * (i % 4));
+		next = (unsigned int*) &(m_seq[(i/4)+1]);
+
+		//memcpy(&temp_c[0], &m_seq[(i/4)+1], 4);
+		//temp_c[4]='\0';
+		//strrev(temp_c);
+		//next = (unsigned int*)&temp_c[0];
+		next_val = *next;
+		//printf("\n Blah blah Next: %u \n", next_val);
+		//next_val = *next;
+		next_val = next_val << (24+(2*((i-1)%4)));
+		next_val = next_val >> 30;
+		//printf("Next: %u Modified Current val: %u Mod Next: %u \n",next_val, curr_val, next_val);
+		//getchar();
+		if ((i%4)!=0)
+			next_val = curr_val + next_val;
+		else
+			next_val = curr_val;
+		if (i == 0)
+			min_val = curr_val;
+		else
+		{
+			if (curr_val < min_val)
+				min_val = curr_val;
+		}
+	}
+	return min_val;
+	
 }
 
 size_t Kmer::getHashCode() const
