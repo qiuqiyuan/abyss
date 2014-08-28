@@ -121,6 +121,17 @@ void NetworkSequenceCollection::run()
 				EndState();
 				SetState(NAS_WAITING);
 				m_comm.sendCheckPointMessage();
+                                 
+				break;
+                        }
+			case NAS_ADJ_COMPLETE:
+                        {
+				m_comm.barrier();
+				pumpNetwork();
+				logger(0) << "Added " << m_numBasesAdjSet
+					<< " edges.\n";
+				m_comm.reduce(m_numBasesAdjSet);                                
+				EndState();
 #ifndef DEBUG_QQY_ENABLE
                                 //numSendPackets = m_comm.getNumSendPackets();
                                 numSendMessages = m_comm.getNumSendMessages();
@@ -135,19 +146,8 @@ void NetworkSequenceCollection::run()
                                 //m_comm.gather(NULL, numRecvPackets);
                                 m_comm.gather(NULL, numRecvMessages);
                                 m_comm.gather(NULL, numRecvBytes);                                
-#endif                                 
-				break;
-                        }
-			case NAS_ADJ_COMPLETE:
-                        {
-				m_comm.barrier();
-				pumpNetwork();
-				logger(0) << "Added " << m_numBasesAdjSet
-					<< " edges.\n";
-				m_comm.reduce(m_numBasesAdjSet);                                
-				EndState();
+#endif                                
 				SetState(NAS_WAITING);                                
-                                
 				break;
                         }
 			case NAS_ERODE:
