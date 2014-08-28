@@ -13,6 +13,8 @@
 #include <utility>
 #include <iostream>
 
+#define MAX_CORE_NUM 256
+
 enum NetworkAssemblyState
 {
 	NAS_LOADING, // loading sequences
@@ -199,12 +201,12 @@ class NetworkSequenceCollection : public ISequenceCollection
 		unsigned m_numReachedCheckpoint;
 
 #ifndef DEBUG_QQY_ENABLE
-                long long unsigned qqy_m_numSendPackets_array[48];
-                long long unsigned qqy_m_numSendMessages_array[48];
-                long long unsigned qqy_m_numSendBytes_array[48];
-                long long unsigned qqy_m_numRecvPackets_array[48];
-                long long unsigned qqy_m_numRecvMessages_array[48];
-                long long unsigned qqy_m_numRecvBytes_array[48];
+                long long unsigned qqy_m_numSendPackets_array[MAX_CORE_NUM];
+                long long unsigned qqy_m_numSendMessages_array[MAX_CORE_NUM];
+                long long unsigned qqy_m_numSendBytes_array[MAX_CORE_NUM];
+                long long unsigned qqy_m_numRecvPackets_array[MAX_CORE_NUM];
+                long long unsigned qqy_m_numRecvMessages_array[MAX_CORE_NUM];
+                long long unsigned qqy_m_numRecvBytes_array[MAX_CORE_NUM];
 #endif 
                 
 		/** The sum of the values returned by the slave nodes in their
