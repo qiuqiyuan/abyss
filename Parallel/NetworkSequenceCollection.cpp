@@ -193,6 +193,7 @@ void NetworkSequenceCollection::run()
 			case NAS_TRIM:
 			{
 				assert(m_trimStep != 0);
+                                cout<< opt::rank << " : m_trimStep == " << m_trimStep; 
                                 if(m_trimStep == 4){
                                     cout << opt::rank <<" DEBUG: Hi I am slave, before the barrier\n";
                                 }
