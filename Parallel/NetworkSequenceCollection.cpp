@@ -207,20 +207,36 @@ void NetworkSequenceCollection::run()
                                     cout<< opt::rank << " DEBUG: Hi I am slave, before the send checkpointmessage\n";
                                 }                                
 				m_comm.sendCheckPointMessage(numRemoved);
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, after the send checkpointmessage\n";
+                                } 
 #ifndef DEBUG_QQY_ENABLE
                                 //numSendPackets = m_comm.getNumSendPackets();
                                 numSendMessages = m_comm.getNumSendMessages();
                                 numSendBytes = m_comm.getNumSendBytes();
+                                
                                 //numRecvPackets = m_comm.getNumRecvPackets();
-                                numRecvMessages = m_comm.getNumRecvMessages();
-                                numRecvBytes = m_comm.getNumRecvBytes();
+                                numRecvMessages = m_comm.getNumRecvMessages();                                
+                                numRecvBytes = m_comm.getNumRecvBytes();                                
                                 
                                 //m_comm.gather(NULL, numSendPackets);
                                 m_comm.gather(NULL, numSendMessages);
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, after send Message\n";
+                                }
                                 m_comm.gather(NULL, numSendBytes);
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, after send Bytes\n";
+                                }
                                 //m_comm.gather(NULL, numRecvPackets);
                                 m_comm.gather(NULL, numRecvMessages);
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, after recv Message\n";
+                                }
                                 m_comm.gather(NULL, numRecvBytes);                                
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, after recv Bytes\n";
+                                }
 #endif                                
 				break;
 			}
