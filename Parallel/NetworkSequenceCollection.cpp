@@ -197,7 +197,22 @@ void NetworkSequenceCollection::run()
 				size_t numRemoved = performNetworkTrim(this);
 				EndState();
 				SetState(NAS_WAITING);
-				m_comm.sendCheckPointMessage(numRemoved);                                
+				m_comm.sendCheckPointMessage(numRemoved);
+#ifndef DEBUG_QQY_ENABLE
+                                //numSendPackets = m_comm.getNumSendPackets();
+                                numSendMessages = m_comm.getNumSendMessages();
+                                numSendBytes = m_comm.getNumSendBytes();
+                                //numRecvPackets = m_comm.getNumRecvPackets();
+                                numRecvMessages = m_comm.getNumRecvMessages();
+                                numRecvBytes = m_comm.getNumRecvBytes();
+                                
+                                //m_comm.gather(NULL, numSendPackets);
+                                m_comm.gather(NULL, numSendMessages);
+                                m_comm.gather(NULL, numSendBytes);
+                                //m_comm.gather(NULL, numRecvPackets);
+                                m_comm.gather(NULL, numRecvMessages);
+                                m_comm.gather(NULL, numRecvBytes);                                
+#endif                                
 				break;
 			}
 			case NAS_REMOVE_MARKED: 
@@ -396,6 +411,21 @@ size_t NetworkSequenceCollection::controlTrimRound(unsigned trimLen)
 	if (numRemoved > 0)
 		cout << "Pruned " << numSweeped << " k-mer in "
 			<< numRemoved << " tips.\n";     
+#ifndef DEBUG_QQY_ENABLE
+        //size_t numSendPackets = m_comm.getNumSendPackets();
+        size_t numSendMessages = m_comm.getNumSendMessages();
+        size_t numSendBytes = m_comm.getNumSendBytes();
+        //size_t numRecvPackets = m_comm.getNumRecvPackets();
+        size_t numRecvMessages = m_comm.getNumRecvMessages();
+        size_t numRecvBytes = m_comm.getNumRecvBytes();
+
+        //outputCounter(qqy_m_numSendPackets_array, numSendPackets, "NAS_TRIM Send Packets:");
+        outputCounter(qqy_m_numSendMessages_array, numSendMessages, "NAS_TRIM Send Messages:");
+        outputCounter(qqy_m_numSendBytes_array, numSendBytes, "NAS_TRIM Send Bytes:");
+        //outputCounter(qqy_m_numRecvPackets_array, numRecvPackets, "NAS_TRIM Recv Packets:");
+        outputCounter(qqy_m_numRecvMessages_array, numRecvMessages, "NAS_TRIM Recv Messages:");
+        outputCounter(qqy_m_numRecvBytes_array, numRecvBytes, "NAS_TRIM Recv Bytes:");
+#endif         
 	return numRemoved;
 }
 
