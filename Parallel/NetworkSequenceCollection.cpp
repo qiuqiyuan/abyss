@@ -201,8 +201,17 @@ void NetworkSequenceCollection::run()
                                     cout << opt::rank << " DEBUG: Hi I am slave, after the barrier\n";
                                 }                                
 				size_t numRemoved = performNetworkTrim(this);
+                                if(m_trimStep == 4){
+                                    cout << opt::rank << " DEBUG: Hi I am slave, after performNetworkTrim\n";
+                                } 
 				EndState();
+                                if(m_trimStep == 4){
+                                    cout << opt::rank << " DEBUG: Hi I am slave, after the EndState\n";
+                                } 
 				SetState(NAS_WAITING);
+                                if(m_trimStep == 4){
+                                    cout << opt::rank << " DEBUG: Hi I am slave, after the NAS_WAITING\n";
+                                } 
                                 if(m_trimStep == 4){
                                     cout<< opt::rank << " DEBUG: Hi I am slave, before the send checkpointmessage\n";
                                 }                                
