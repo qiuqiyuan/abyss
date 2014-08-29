@@ -418,13 +418,27 @@ size_t NetworkSequenceCollection::controlTrimRound(unsigned trimLen)
         //size_t numRecvPackets = m_comm.getNumRecvPackets();
         size_t numRecvMessages = m_comm.getNumRecvMessages();
         size_t numRecvBytes = m_comm.getNumRecvBytes();
-
+        if(trimLen == 4){
+            cout<<"before master synchronyzation\n";
+        }
         //outputCounter(qqy_m_numSendPackets_array, numSendPackets, "NAS_TRIM Send Packets:");
         outputCounter(qqy_m_numSendMessages_array, numSendMessages, "NAS_TRIM Send Messages:");
+        if(trimLen == 4){
+            cout << "passed sync SendMessage";
+        }
         outputCounter(qqy_m_numSendBytes_array, numSendBytes, "NAS_TRIM Send Bytes:");
+        if(trimLen == 4){
+            cout << "passed sync SendBytes";
+        }
         //outputCounter(qqy_m_numRecvPackets_array, numRecvPackets, "NAS_TRIM Recv Packets:");
         outputCounter(qqy_m_numRecvMessages_array, numRecvMessages, "NAS_TRIM Recv Messages:");
+        if(trimLen == 4){
+            cout << "passed sync Recv Messages";
+        }
         outputCounter(qqy_m_numRecvBytes_array, numRecvBytes, "NAS_TRIM Recv Bytes:");
+        if(trimLen == 4 ){
+            cout << "passed sync Recv Bytes"
+        }
 #endif         
 	return numRemoved;
 }
