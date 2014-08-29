@@ -437,7 +437,7 @@ size_t NetworkSequenceCollection::controlTrimRound(unsigned trimLen)
         }
         outputCounter(qqy_m_numRecvBytes_array, numRecvBytes, "NAS_TRIM Recv Bytes:");
         if(trimLen == 4 ){
-            cout << "passed sync Recv Bytes"
+            cout << "passed sync Recv Bytes";
         }
 #endif         
 	return numRemoved;
