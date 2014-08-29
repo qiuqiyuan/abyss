@@ -193,10 +193,19 @@ void NetworkSequenceCollection::run()
 			case NAS_TRIM:
 			{
 				assert(m_trimStep != 0);
+                                if(m_trimStep == 4){
+                                    cout << opt::rank <<" DEBUG: Hi I am slave, before the barrier";
+                                }
 				m_comm.barrier();
+                                if(m_trimStep == 4){
+                                    cout << opt::rank << " DEBUG: Hi I am slave, after the barrier";
+                                }                                
 				size_t numRemoved = performNetworkTrim(this);
 				EndState();
 				SetState(NAS_WAITING);
+                                if(m_trimStep == 4){
+                                    cout<< opt::rank << " DEBUG: Hi I am slave, before the send checkpointmessage";
+                                }                                
 				m_comm.sendCheckPointMessage(numRemoved);
 #ifndef DEBUG_QQY_ENABLE
                                 //numSendPackets = m_comm.getNumSendPackets();
