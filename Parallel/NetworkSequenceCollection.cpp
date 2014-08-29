@@ -405,7 +405,9 @@ size_t NetworkSequenceCollection::controlTrimRound(unsigned trimLen)
 	while (!checkpointReached())
 		pumpNetwork();
 	numRemoved += m_checkpointSum;
-
+        if(trimLen == 4){
+            cout << "DEBUG: Hey I am here after you send the checkpoint\n";
+        }
 	size_t numSweeped = controlRemoveMarked();
 
 	if (numRemoved > 0)
